@@ -8,6 +8,13 @@ grafana_port = 3000
 grafana_user = "admin"
 grafana_password = "admin"
 
+ifdb_database = ""
+datasource_name = ""
+ifdb_password = ""
+ifdb_host = ""
+ifdb_port = ""
+ifdb_user = ""
+
 def main():
     logging.basicConfig(level=logging.DEBUG)
 
@@ -31,6 +38,19 @@ def main():
     datasources_get = session.get(os.path.join(grafana_url, 'api', 'datasources'))
     datasources = datasources_get.json()
     logging.info("grafana server data sources: {}".format(datasources))
+
+    # Add new datasource
+    datasources_put = session.put(
+        os.path.join(grafana_url, 'api', 'datasources'),
+        data=json.dumps({
+            'access': 'direct',
+            'database': ifdb_database,
+            'name': datasource_name,
+            'password': ifdb_password,
+            'type': 'influxdb_08',
+            'url': 'http://%s:%u' % (ifdb_host, ifdb_port),
+            'user': ifdb_user}),
+        headers={'content-type': 'application/json'})
 
 if __name__=="__main__":
     main()
