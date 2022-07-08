@@ -42,19 +42,32 @@ def main():
     logging.info("grafana server data sources: %s", datasources)
 
     # Add new datasource
-    datasources_put = session.put(
+    datasources_post = session.post(
         os.path.join(grafana_url, 'api', 'datasources'),
         data=json.dumps({
-            'access': 'direct',
-            'database': ifdb_database,
-            'name': datasource_name,
-            'password': ifdb_password,
-            'type': 'influxdb_08',
-            'url': f'http://{ifdb_host}:{ifdb_port}',
-            'user': ifdb_user}),
+            'access': 'proxy',
+            'database': '',
+            'name': 'InfluxDB',
+            'type': 'influxdb',
+            'basicAuth': True,
+            'isDefault': True,
+            'url': 'http://osiris:8086',
+            'user': '',
+            'basicAuthUser': 'admin',
+            'jsonData': {
+                'defaultBucket': 'cloudsensor',
+                'httpMode': 'POST',
+                'organization': 'phobosys',
+                'version': 'Flux',
+                'basicAuthPassword': 'basicpassword'
+            },
+            'secureJsonData': {
+                'basicAuthPassword': 'basicpassword'
+            }}),
         headers={'content-type': 'application/json'})
-    if datasources_put.status_code != 200:
-        logging.error("login response %d, aborting", datasources_put.status_code)
+    if datasources_post.status_code != 200:
+        logging.error("login response %d, aborting", datasources_post.status_code)
+        logging.error("login response %s, aborting", datasources_post.text)
         sys.exit()
 
 if __name__=="__main__":
