@@ -45,7 +45,6 @@ def main():
             'database': '',
             'name': f'{grafana_datasource}',
             'type': 'influxdb',
-            'basicAuth': True,
             'isDefault': True,
             'url': f'http://{influx_host}:{influx_port}',
             'user': '',
