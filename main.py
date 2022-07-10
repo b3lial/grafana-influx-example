@@ -4,7 +4,7 @@ import logging
 import sys
 import requests
 
-grafana_host = "localhost"
+grafana_host = "osiris"
 grafana_port = 3000
 grafana_user = "admin"
 grafana_password = "admin"
@@ -47,22 +47,24 @@ def main():
         data=json.dumps({
             'access': 'proxy',
             'database': '',
-            'name': 'InfluxDB',
+            'name': 'InfluxDB4',
             'type': 'influxdb',
             'basicAuth': True,
             'isDefault': True,
             'url': 'http://osiris:8086',
             'user': '',
-            'basicAuthUser': 'admin',
+            "basicAuth": False,
+            'basicAuthUser': '',
+            "basicAuthPassword": '',
+            'withCredentials': False,
             'jsonData': {
                 'defaultBucket': 'cloudsensor',
                 'httpMode': 'POST',
                 'organization': 'phobosys',
                 'version': 'Flux',
-                'basicAuthPassword': 'basicpassword'
             },
             'secureJsonData': {
-                'basicAuthPassword': 'basicpassword'
+                'token': 'O76lfizLy8f6DDeDZhRSIK4C49kYhKJtlbdgtOBPtQzTuuZmQ2kla7RKXLEhJ5GkFMLAD6C9GL2uaAbZF6vr8w=='
             }}),
         headers={'content-type': 'application/json'})
     if datasources_post.status_code != 200:
