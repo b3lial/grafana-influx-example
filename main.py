@@ -33,7 +33,7 @@ def main():
         headers={'content-type': 'application/json'})
 
     if login_post.status_code != 200:
-        logging.error("login response %d, aborting", login_post.status_code)
+        logging.error("login response status %d", login_post.status_code)
         sys.exit()
 
     # Get list of datasources
@@ -68,8 +68,8 @@ def main():
             }}),
         headers={'content-type': 'application/json'})
     if datasources_post.status_code != 200:
-        logging.error("login response %d, aborting", datasources_post.status_code)
-        logging.error("login response %s, aborting", datasources_post.text)
+        logging.error("login response status %d", datasources_post.status_code)
+        logging.error("login response test %s", datasources_post.text)
         sys.exit()
 
 if __name__=="__main__":
