@@ -7,7 +7,7 @@ import requests
 grafana_host = "osiris"
 grafana_port = 3000
 grafana_user = "admin"
-grafana_password = "admin"
+grafana_password = "admin2"
 grafana_datasource = "InfluxDB"
 
 influx_host = "osiris"
