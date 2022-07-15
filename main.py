@@ -4,25 +4,32 @@ import logging
 import sys
 import requests
 
-grafana_host = "osiris"
-grafana_port = 3000
-grafana_user = "admin"
-grafana_password = "admin2"
-grafana_datasource = "InfluxDB"
-
-influx_host = "osiris"
-influx_port = 8086
-influx_bucket = "cloudsensor"
-influx_organisation = "phobosys"
-influx_token = "O76lfizLy8f6DDeDZhRSIK4C49kYhKJtlbdgtOBPtQzTuuZmQ2kla7RKXLEhJ5GkFMLAD6C9GL2uaAbZF6vr8w=="
+GRAFANA_PORT = 3000
+GRAFANA_DATASOURCE = "InfluxDB"
+INFLUX_PORT = 8086
 
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
 
+    # parse commandline
+    argumentList = sys.argv[1:]
+    n = len(argumentList)
+    if n != 7:
+        logging.error("expected 7 commandline parameters")
+        sys.exit(os.EX_SOFTWARE)
+
+    grafana_user = argumentList[0]
+    grafana_password = argumentList[1]
+    grafana_host = argumentList[2]
+    influx_token = argumentList[3]
+    influx_host = argumentList[4]
+    influx_bucket = argumentList[5]
+    influx_organisation = argumentList[6]
+
     # login and open session
     logging.info("trying to login into grafana")
-    grafana_url = os.path.join('http://', f'{grafana_host}:{grafana_port}')
+    grafana_url = os.path.join('http://', f'{grafana_host}:{GRAFANA_PORT}')
     session = requests.Session()
     login_post = session.post(
         os.path.join(grafana_url, 'login'),
@@ -43,10 +50,10 @@ def main():
         data=json.dumps({
             'access': 'proxy',
             'database': '',
-            'name': f'{grafana_datasource}',
+            'name': f'{GRAFANA_DATASOURCE}',
             'type': 'influxdb',
             'isDefault': True,
-            'url': f'http://{influx_host}:{influx_port}',
+            'url': f'http://{influx_host}:{INFLUX_PORT}',
             'user': '',
             'basicAuth': False,
             'basicAuthUser': '',
@@ -66,7 +73,7 @@ def main():
         logging.error("login response status %d", datasources_post.status_code)
         logging.error("login response test %s", datasources_post.text)
         sys.exit(os.EX_SOFTWARE)
-    logging.info("created new data source %s", grafana_datasource)
+    logging.info("created new data source %s", GRAFANA_DATASOURCE)
 
 if __name__=="__main__":
     main()
