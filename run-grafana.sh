@@ -13,7 +13,7 @@ docker run -d -p 3000:3000 \
 	grafana/grafana
 
 until [ "`docker inspect -f {{.State.Running}} grafana`"=="true" ]; do
-    sleep 0.1;
+    sleep 1;
 done;
 
 docker exec -it grafana grafana-cli --homepath "/usr/share/grafana" admin reset-admin-password $1
